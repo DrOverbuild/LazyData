@@ -110,6 +110,7 @@ The web component uses a wrapper for `fetch()` that is available to use and offe
 #### `options`
 
 | Property | Type | Default Value | Description |
+|----------|------|---------------|-------------|
 | `url` | `string` | | URL of the request. |
 | `method` | `string` | Default for `fetch()` (`get`) | Method of the request. |
 | `body` | `any?` | | Body of the HTTP request converted to a JSON object. |
