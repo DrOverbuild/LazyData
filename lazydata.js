@@ -1,8 +1,10 @@
+// Copyright (c) 2024 Jasper Reddin and contributors MIT
+
 const ajaxActionDefaults = {
   onRequestStart: () => {},
   onRequestSuccess: () => {},
   onRequestError: () => {},
-  defaultHeaders: [['X-Requested-With', 'XMLHttpRequest']],
+  headers: [["X-Requested-With", "XMLHttpRequest"]],
 };
 
 /**
@@ -30,7 +32,7 @@ const ajaxActionDefaults = {
  */
 async function ajaxAction(options) {
   function useFallback(fn, fallbackFn, ...params) {
-    if (fn && typeof fn === 'function') {
+    if (fn && typeof fn === "function") {
       fn(params);
     } else {
       fallbackFn(params);
@@ -38,7 +40,7 @@ async function ajaxAction(options) {
   }
 
   if (!options.url) {
-    throw new Error('options.url is required');
+    throw new Error("options.url is required");
   }
 
   useFallback(options.onRequestStart, ajaxActionDefaults.onRequestStart);
@@ -48,12 +50,12 @@ async function ajaxAction(options) {
 
   try {
     /** @type RequestInit */
-    let headers = [...ajaxActionDefaults.defaultHeaders, ...(options.headers ?? [])];
+    let headers = [...ajaxActionDefaults.headers, ...(options.headers ?? [])];
 
     const init = { method: options.method, headers };
     if (options.body) {
       init.body = JSON.stringify(options.body);
-      init.headers.push(['Content-Type', 'application/json']);
+      init.headers.push(["Content-Type", "application/json"]);
     }
 
     res = await fetch(options.url, init);
@@ -67,7 +69,7 @@ async function ajaxAction(options) {
 
     useFallback(options.onRequestSuccess, ajaxActionDefaults.onRequestSuccess);
 
-    if (res.headers.get('Content-Type')?.includes('application/json')) {
+    if (res.headers.get("Content-Type")?.includes("application/json")) {
       return await res.json();
     } else {
       return await res.text();
@@ -82,82 +84,80 @@ class LazyData extends HTMLElement {
   constructor() {
     super();
 
-    this._href = this.getAttribute('href');
+    this._href = this.getAttribute("href");
 
-    this._hideElementsForState('success');
-    this._hideElementsForState('error');
+    this._hideElementsForState("success");
+    this._hideElementsForState("error");
   }
 
   get href() {
-    console.log('get href');
+    console.log("get href");
     return this._href;
   }
 
   set href(value) {
-    console.log('set href');
-    this.setAttribute('href', value);
+    console.log("set href");
+    this.setAttribute("href", value);
   }
 
   _hideElementsForState(state) {
     for (const element of this.querySelectorAll(`[lazy-data-${state}]`)) {
-      element.style.display = 'none';
+      element.style.display = "none";
     }
   }
 
   _showElementsForState(state) {
     for (const element of this.querySelectorAll(`[lazy-data-${state}]`)) {
-      element.style.display = '';
+      element.style.display = "";
     }
   }
 
   async _load() {
     const allowedToContinue = this.dispatchEvent(
-      new CustomEvent('lazy-data:start', {
+      new CustomEvent("lazy-data:start", {
         bubbles: true,
         cancelable: true,
-      })
+      }),
     );
     if (!allowedToContinue) return;
 
     const data = await ajaxAction({
       url: this._href,
       onRequestSuccess: () => {
-        this._hideElementsForState('loading');
-        this._showElementsForState('success');
+        this._hideElementsForState("loading");
+        this._showElementsForState("success");
       },
       onRequestStart: () => {},
-      onRequestError: e => {
-        const allowedToContinue = this.dispatchEvent(
-          new CustomEvent('lazy-data:eror', {
+      onRequestError: (e) => {
+        this.dispatchEvent(
+          new CustomEvent("lazy-data:eror", {
             bubbles: true,
-            cancelable: true,
+            cancelable: false,
             detail: e,
-          })
+          }),
         );
 
-        if (!allowedToContinue) return;
-
-        this._hideElementsForState('loading');
-        this._showElementsForState('error');
+        this._hideElementsForState("loading");
+        this._showElementsForState("error");
       },
     });
     this._discoverDataElements(data);
 
     this.dispatchEvent(
-      new CustomEvent('lazy-data:success', {
+      new CustomEvent("lazy-data:success", {
         bubbles: true,
         cancelable: false,
         detail: data,
-      })
+      }),
     );
   }
 
   _discoverDataElements(data) {
-    const dataElements = this.querySelectorAll('[lazy-data-id]');
+    const dataElements = this.querySelectorAll("[lazy-data-id]");
     for (const dataElement of dataElements) {
-      const value = this._navigateObject(data, dataElement.getAttribute('lazy-data-id'));
-      if (dataElement.tagName === 'img') {
-        dataElement.setAttribute('src', value);
+      const value = this._navigateObject(data, dataElement.getAttribute("lazy-data-id"));
+      if (dataElement.tagName === "img") {
+        dataElement.setAttribute("src", value);
       } else {
         dataElement.innerText = value;
       }
@@ -169,7 +169,7 @@ class LazyData extends HTMLElement {
    * @param {string} identifier
    */
   _navigateObject(data, identifier) {
-    const parts = identifier.split('.');
+    const parts = identifier.split(".");
     let node = data;
     for (const part of parts) {
       node = node[part];
@@ -181,24 +181,24 @@ class LazyData extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['href'];
+    return ["href"];
   }
 
   attributeChangedCallback(name, _, newValue) {
-    if (name === 'href') {
-      console.log('href attribute changed');
+    if (name === "href") {
+      console.log("href attribute changed");
       this._href = newValue;
       this.reload();
     }
   }
 
   reload() {
-    this._hideElementsForState('error');
-    this._hideElementsForState('success');
-    this._showElementsForState('loading');
+    this._hideElementsForState("error");
+    this._hideElementsForState("success");
+    this._showElementsForState("loading");
 
     this._load();
   }
 }
 
-customElements.define('lazy-data', LazyData);
+customElements.define("lazy-data", LazyData);

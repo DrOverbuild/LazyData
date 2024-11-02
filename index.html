@@ -43,22 +43,22 @@
     <script src="lazydata.js"></script>
     <script>
       function showToast(alertMessage, alertType, autohide = true, delay = 3000) {
-        const main = document.querySelector('main');
-        const toast = document.createElement('div');
+        const main = document.querySelector("main");
+        const toast = document.createElement("div");
         toast.classList.add(
-          'toast',
+          "toast",
           `text-${alertType}-emphasis`,
           `bg-${alertType}-subtle`,
           `border-${alertType}`,
-          'position-fixed',
-          'bottom-0',
-          'end-0',
-          'mb-3',
-          'me-3'
+          "position-fixed",
+          "bottom-0",
+          "end-0",
+          "mb-3",
+          "me-3",
         );
-        toast.role = 'alert';
-        toast.ariaLive = 'assertive';
-        toast.ariaAtomic = 'true';
+        toast.role = "alert";
+        toast.ariaLive = "assertive";
+        toast.ariaAtomic = "true";
         toast.dataset.bsAutohide = String(autohide);
         toast.dataset.bsDelay = String(delay);
         toast.innerHTML = `<div class="d-flex">
@@ -70,7 +70,7 @@
         const toastBs = bootstrap.Toast.getOrCreateInstance(toast);
         toastBs.show();
 
-        toast.addEventListener('hidden.bs.toast', e => {
+        toast.addEventListener("hidden.bs.toast", (e) => {
           toast.remove();
         });
 
@@ -81,28 +81,28 @@
 
       ajaxActionDefaults.ajaxActionOnRequestStart = () => {
         currentToast?.hide();
-        currentToast = showToast('Loading content...', 'secondary');
+        currentToast = showToast("Loading content...", "secondary");
       };
 
       ajaxActionDefaults.ajaxActionOnRequestSuccess = () => {
         currentToast?.hide();
-        currentToast = showToast('Content loading successfully!', 'success');
+        currentToast = showToast("Content loading successfully!", "success");
       };
 
       ajaxActionDefaults.ajaxActionOnRequestError = (e, status) => {
         currentToast?.hide();
-        currentToast = showToast(e, 'danger', false);
+        currentToast = showToast(e, "danger", false);
       };
 
-      const lazyDataCard = document.getElementById('lazy-data-card');
-      lazyDataCard.addEventListener('lazy-data:success', function (e) {
-        const dobEl = e.target.querySelector('.date-of-birth');
+      const lazyDataCard = document.getElementById("lazy-data-card");
+      lazyDataCard.addEventListener("lazy-data:success", function (e) {
+        const dobEl = e.target.querySelector(".date-of-birth");
         const dob = new Date(Date.parse(e.detail.user.date_of_birth));
         dobEl.innerText = dob.toLocaleDateString();
       });
 
-      document.getElementById('change-user').addEventListener('click', function () {
-        lazyDataCard.href = 'https://api.slingacademy.com/v1/sample-data/users/2';
+      document.getElementById("change-user").addEventListener("click", function () {
+        lazyDataCard.href = "https://api.slingacademy.com/v1/sample-data/users/2";
       });
     </script>
   </body>
