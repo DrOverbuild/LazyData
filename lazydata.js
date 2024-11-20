@@ -33,9 +33,9 @@ const ajaxActionDefaults = {
 async function ajaxAction(options) {
   function useFallback(fn, fallbackFn, ...params) {
     if (fn && typeof fn === "function") {
-      fn(params);
+      fn(...params);
     } else {
-      fallbackFn(params);
+      fallbackFn(...params);
     }
   }
 
