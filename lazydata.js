@@ -11,7 +11,8 @@ const ajaxActionDefaults = {
  * @typedef AjaxActionOptions
  * @property {string} url - URL of the request
  * @property {string?} method - Method of HTTP request
- * @property {any?} body - Body of HTTP request. If defined, this will be converted to a JSON object
+ * @property {any?} body - Body of HTTP request. If defined, this will be converted to a JSON object unless the object
+ *     is an instance of FormData, in which case the object itself will be passed as the body to the fetch API.
  * @property {HeadersInit?} headers - Additional headers added to request. If not set
  * @property {(() => void)?} onRequestStart - Called when the request is started. If not set, we look
  *     at the lazydata global object for global defaults. By default there is no action.
@@ -54,8 +55,12 @@ async function ajaxAction(options) {
 
     const init = { method: options.method, headers };
     if (options.body) {
-      init.body = JSON.stringify(options.body);
-      init.headers.push(["Content-Type", "application/json"]);
+      if (options.body instanceof FormData) {
+        init.body = options.body;
+      } else {
+        init.body = JSON.stringify(options.body);
+        init.headers.push(["Content-Type", "application/json"]);
+      }
     }
 
     res = await fetch(options.url, init);
