@@ -46,9 +46,10 @@ Web component to launch an AJAX fetch to a specified URL as soon as the element 
 The `[href]` attribute on `<lazy-data>` sets the URL for the AJAX request. The request will use the GET method. To set
 custom headers, configure `ajaxActionDefaults`. See below.
 
-This attribute can be changed by setting the `href` property of the element or the `[href]` attribute itself. The web
-component will automatically go into the loading state (displaying the elements with the `[lazy-data-loading]`
-attribute and hiding `[lazy-data-success]` and `[lazy-data-error]` elements) and start the request for the new URL.
+This attribute can be changed by setting the `href` property of the element or the `[href]` attribute itself. If the new
+value of `href` is not an empty string, the web component will automatically go into the loading state (displaying the
+elements with the `[lazy-data-loading]` attribute and hiding `[lazy-data-success]` and `[lazy-data-error]` elements) and
+start the request for the new URL. If `href` is set to an empty string, nothing happens.
 
 ```html
 <lazy-data href="..." id="lazy-data-example"></lazy-data>

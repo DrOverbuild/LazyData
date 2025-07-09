@@ -96,12 +96,10 @@ class LazyData extends HTMLElement {
   }
 
   get href() {
-    console.log("get href");
     return this._href;
   }
 
   set href(value) {
-    console.log("set href");
     this.setAttribute("href", value);
   }
 
@@ -191,7 +189,7 @@ class LazyData extends HTMLElement {
 
   attributeChangedCallback(name, _, newValue) {
     if (name === "href") {
-      console.log("href attribute changed");
+      if (!newValue || newValue === "") return;
       this._href = newValue;
       this.reload();
     }

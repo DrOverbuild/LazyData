@@ -30,6 +30,7 @@
           </lazy-data>
           <div class="text-center">
             <button class="btn btn-primary" id="change-user">Change User</button>
+            <button class="btn btn-primary" id="clear-user">Clear User</button>
           </div>
         </div>
       </div>
@@ -103,6 +104,10 @@
 
       document.getElementById("change-user").addEventListener("click", function () {
         lazyDataCard.href = "https://api.slingacademy.com/v1/sample-data/users/2";
+      });
+
+      document.getElementById("clear-user").addEventListener("click", function () {
+        lazyDataCard.href = "";
       });
     </script>
   </body>
