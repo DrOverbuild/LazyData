@@ -133,7 +133,7 @@ class LazyData extends HTMLElement {
       onRequestStart: () => {},
       onRequestError: (e) => {
         this.dispatchEvent(
-          new CustomEvent("lazy-data:eror", {
+          new CustomEvent("lazy-data:error", {
             bubbles: true,
             cancelable: false,
             detail: e,
