@@ -84,6 +84,11 @@ For example, if the response looks like this:
 
 Any element with the attribute `lazy-data-id="user.id"` will get its `innerText` set to `1`.
 
+## `[show-loading-on-reload]` Attribute
+
+Sometimes it does not make sense to show a loading state if there is data already rendered. To keep the previous data
+in view, set `show-loading-on-reload="false"` on the `<lazy-data>` element.
+
 ## Custom Events
 
 LazyData dispatches three events:
