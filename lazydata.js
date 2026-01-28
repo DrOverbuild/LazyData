@@ -148,6 +148,7 @@ class LazyData extends HTMLElement {
         );
 
         this._hideElementsForState('loading');
+        this._hideElementsForState('success');
         this._showElementsForState('error');
       },
     });
